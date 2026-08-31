@@ -1,7 +1,1 @@
-{
-  "functions": {
-    "api/crm.py": {
-      "runtime": "python3.12"
-    }
-  }
-}
+{}
