@@ -89,10 +89,19 @@ export default function handler(req, res) {
         body = {};
     }
 
-    const filters = body.filters || {};
+    // 兼容：filters 可能是对象，也可能是 JSON 字符串
+    let filters = body.filters || {};
+    if (typeof filters === "string") {
+        try { filters = JSON.parse(filters); } catch (e) { filters = {}; }
+    }
+
     const queryType = body.query_type || "stat";
     const groupBy = body.group_by || "月份";
-    const agg = body.agg || ["count", "distinct(医院)", "sum(时长)"];
+    // agg 可能是数组或 JSON 字符串
+    let agg = body.agg || ["count", "distinct(医院)", "sum(时长)"];
+    if (typeof agg === "string") {
+        try { agg = JSON.parse(agg); } catch (e) { agg = ["count", "distinct(医院)", "sum(时长)"]; }
+    }
     const listFieldName = body.list_field || "医院";
 
     const result = filterRecords(filters);
